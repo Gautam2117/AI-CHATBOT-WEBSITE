@@ -30,8 +30,8 @@ const TestimonialsSection = () => {
     },
   ];
 
-  const carouselRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef();
 
   const scrollToIndex = (index) => {
     if (carouselRef.current) {
@@ -46,22 +46,23 @@ const TestimonialsSection = () => {
   };
 
   const scroll = (direction) => {
-    let newIndex = direction === "left"
-      ? Math.max(currentIndex - 1, 0)
-      : Math.min(currentIndex + 1, testimonials.length - 1);
+    const total = testimonials.length;
+    let newIndex =
+      direction === "left"
+        ? (currentIndex - 1 + total) % total
+        : (currentIndex + 1) % total;
     scrollToIndex(newIndex);
   };
 
-  // Autoplay every 6 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       scrollToIndex((currentIndex + 1) % testimonials.length);
-    }, 6000);
+    }, 5000); // every 5s
     return () => clearInterval(interval);
   }, [currentIndex]);
 
   return (
-    <section className="bg-white py-20 px-6 md:px-20 relative">
+    <section className="bg-white py-20 px-6 md:px-20 relative mb-20">
       <h2 className="text-3xl md:text-5xl font-extrabold text-center text-gray-800 mb-16">
         🌟 What Our Users Say
       </h2>
@@ -83,7 +84,7 @@ const TestimonialsSection = () => {
       {/* Carousel */}
       <div
         ref={carouselRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 px-2 no-scrollbar"
+        className="flex gap-6 overflow-hidden snap-x snap-mandatory pb-6 no-scrollbar"
       >
         {testimonials.map((t, index) => (
           <motion.div
@@ -92,7 +93,7 @@ const TestimonialsSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
             viewport={{ once: true }}
-            className="min-w-[85%] md:min-w-[40%] snap-center bg-gradient-to-br from-indigo-50 to-white rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300"
+            className="min-w-[85%] md:min-w-[40%] snap-center bg-gradient-to-br from-indigo-50 to-white rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-[320px] flex flex-col justify-between"
           >
             <p className="text-gray-600 text-md italic leading-relaxed mb-5">
               “{t.feedback}”
@@ -107,7 +108,7 @@ const TestimonialsSection = () => {
         ))}
       </div>
 
-      {/* Dot navigation */}
+      {/* Dots */}
       <div className="flex justify-center gap-2 mt-6">
         {testimonials.map((_, i) => (
           <button

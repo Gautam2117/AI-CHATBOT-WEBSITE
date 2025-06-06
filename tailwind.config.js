@@ -6,7 +6,26 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      // You can safely extend with more utilities here
+      animation: {
+        'slow-spin': 'spin 10s linear infinite',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    // Scrollbar hiding utility
+    function ({ addUtilities }) {
+      addUtilities({
+        '.no-scrollbar': {
+          /* Firefox */
+          'scrollbar-width': 'none',
+          /* Safari and Chrome */
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        },
+      });
+    },
+  ],
 }

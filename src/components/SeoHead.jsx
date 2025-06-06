@@ -5,8 +5,8 @@ import { Helmet } from "react-helmet";
 const SeoHead = ({
   title = "Botify - AI Chatbot for Business",
   description = "Botify is a powerful AI chatbot that boosts your customer support, captures leads, and automates conversations effortlessly.",
-  url = "https://botify.ai",
-  image = "https://botify.ai/og-image.png", // Replace with your actual hosted OG image
+  url = "https://botify-website.vercel.app/",
+  image = "https://botify-website.vercel.app/og-image.png", // Replace with your actual hosted OG image
 }) => {
   return (
     <Helmet>

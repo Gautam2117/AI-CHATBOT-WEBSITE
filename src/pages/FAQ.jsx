@@ -1,7 +1,7 @@
 // src/pages/FAQ.jsx
 import React from "react";
 import { Disclosure } from "@headlessui/react";
-import { ChevronUpIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const faqs = [
   {
@@ -24,6 +24,26 @@ const faqs = [
     question: "Can I train the bot with my own data?",
     answer: "Yes, you can upload your FAQs, documents, or custom knowledge base and Botify will learn from them in real-time.",
   },
+  {
+    question: "How customizable is the chatbot widget?",
+    answer: "You can fully customize the look, feel, and behavior of the Botify widget, including colors, icon, greeting text, and more.",
+  },
+  {
+    question: "Is Botify secure and GDPR compliant?",
+    answer: "Yes. Botify follows industry-standard security practices and is compliant with GDPR and other major data protection regulations.",
+  },
+  {
+    question: "Can my team collaborate inside Botify?",
+    answer: "Yes. You can invite teammates, assign roles, and manage bot responses collaboratively via the Botify dashboard.",
+  },
+  {
+    question: "Does Botify provide analytics?",
+    answer: "Absolutely. Our dashboard gives you real-time insights, message volumes, user activity, satisfaction scores, and more.",
+  },
+  {
+    question: "What support options are available?",
+    answer: "We offer email and live chat support for all plans. Pro and Unlimited users also get dedicated onboarding assistance.",
+  },
 ];
 
 const FAQ = () => {
@@ -36,16 +56,16 @@ const FAQ = () => {
         {faqs.map((faq, idx) => (
           <Disclosure key={idx}>
             {({ open }) => (
-              <div className="border border-indigo-200 rounded-xl p-4 shadow-md bg-white">
-                <Disclosure.Button className="flex justify-between w-full text-left text-indigo-800 font-semibold text-lg">
+              <div className="border border-indigo-200 rounded-xl shadow-md bg-white transition-all hover:shadow-lg">
+                <Disclosure.Button className="flex justify-between w-full px-4 py-3 text-left text-indigo-800 font-semibold text-lg focus:outline-none">
                   <span>{faq.question}</span>
-                  <ChevronUpIcon
-                    className={`${
-                      open ? "transform rotate-180" : ""
-                    } w-5 h-5 text-indigo-500`}
+                  <ChevronDownIcon
+                    className={`w-5 h-5 text-indigo-500 transform transition-transform duration-300 ${
+                      open ? "rotate-180" : ""
+                    }`}
                   />
                 </Disclosure.Button>
-                <Disclosure.Panel className="mt-2 text-gray-600">
+                <Disclosure.Panel className="px-4 pb-4 text-gray-600">
                   {faq.answer}
                 </Disclosure.Panel>
               </div>
