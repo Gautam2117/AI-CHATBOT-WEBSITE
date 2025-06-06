@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://botify.ai/sitemap.xml
