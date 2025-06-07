@@ -57,28 +57,30 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       scrollToIndex((currentIndex + 1) % testimonials.length);
-    }, 5000); // every 5s
+    }, 5000);
     return () => clearInterval(interval);
   }, [currentIndex]);
 
   return (
-    <section className="bg-white py-20 px-6 md:px-20 relative mb-20">
-      <h2 className="text-3xl md:text-5xl font-extrabold text-center text-gray-800 mb-16">
+    <section className="bg-white dark:bg-gray-900 py-20 px-6 md:px-20 relative mb-20 transition-colors duration-300">
+      <h2 className="text-3xl md:text-5xl font-extrabold text-center text-gray-800 dark:text-white mb-16">
         🌟 What Our Users Say
       </h2>
 
       {/* Arrows */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-2 top-[45%] md:left-4 z-10 bg-white p-2 rounded-full shadow-lg hover:scale-110 transition"
+        className="absolute left-2 top-[45%] md:left-4 z-10 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 p-2 rounded-full shadow-lg hover:scale-110 transition"
+        aria-label="Previous Testimonial"
       >
-        <FaChevronLeft className="text-indigo-600" />
+        <FaChevronLeft />
       </button>
       <button
         onClick={() => scroll("right")}
-        className="absolute right-2 top-[45%] md:right-4 z-10 bg-white p-2 rounded-full shadow-lg hover:scale-110 transition"
+        className="absolute right-2 top-[45%] md:right-4 z-10 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 p-2 rounded-full shadow-lg hover:scale-110 transition"
+        aria-label="Next Testimonial"
       >
-        <FaChevronRight className="text-indigo-600" />
+        <FaChevronRight />
       </button>
 
       {/* Carousel */}
@@ -93,30 +95,35 @@ const TestimonialsSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
             viewport={{ once: true }}
-            className="min-w-[85%] md:min-w-[40%] snap-center bg-gradient-to-br from-indigo-50 to-white rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-[320px] flex flex-col justify-between"
+            className="min-w-[85%] md:min-w-[40%] snap-center bg-gradient-to-br from-indigo-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 h-[320px] flex flex-col justify-between"
           >
-            <p className="text-gray-600 text-md italic leading-relaxed mb-5">
+            <p className="text-gray-600 dark:text-gray-300 text-md italic leading-relaxed mb-5">
               “{t.feedback}”
             </p>
             <div>
-              <h4 className="text-indigo-700 font-semibold text-lg">
+              <h4 className="text-indigo-700 dark:text-indigo-400 font-semibold text-lg">
                 {t.name}
               </h4>
-              <p className="text-sm text-gray-500">{t.role}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {t.role}
+              </p>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Dots */}
+      {/* Dot Navigation */}
       <div className="flex justify-center gap-2 mt-6">
         {testimonials.map((_, i) => (
           <button
             key={i}
             onClick={() => scrollToIndex(i)}
-            className={`w-3 h-3 rounded-full ${
-              currentIndex === i ? "bg-indigo-600" : "bg-indigo-200"
-            } transition-all`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              currentIndex === i
+                ? "bg-indigo-600 dark:bg-indigo-400"
+                : "bg-indigo-200 dark:bg-indigo-700"
+            }`}
+            aria-label={`Go to testimonial ${i + 1}`}
           />
         ))}
       </div>

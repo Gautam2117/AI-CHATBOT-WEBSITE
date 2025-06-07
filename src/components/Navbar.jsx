@@ -49,7 +49,7 @@ const Navbar = () => {
 
         {/* CTA */}
         <Link
-          to="/get-started"
+          to="https://ai-chatbot-saas-eight.vercel.app/"
           className="hidden md:inline-block bg-indigo-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-indigo-700 transition"
         >
           Get Started

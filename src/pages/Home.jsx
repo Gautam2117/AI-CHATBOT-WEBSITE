@@ -24,8 +24,8 @@ const Home = () => {
       <SeoHead
         title="Botify – AI Chatbot for Sales, Support, and Lead Capture"
         description="Botify is your intelligent AI assistant, automating customer service, increasing lead conversion, and scaling 24/7 support — without hiring more agents."
-        url="https://botify.ai"
-        image="https://botify.ai/og-image.png"
+        url="https://botify-website.vercel.app/"
+        image="https://botify-website.vercel.app/og-image.png"
       />
 
       {/* Hero Section */}
@@ -49,7 +49,7 @@ const Home = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-6 justify-center md:justify-start">
             <Link
-              to="/get-started"
+              to="https://ai-chatbot-saas-eight.vercel.app/"
               className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg transition duration-300"
             >
               Get Started for Free

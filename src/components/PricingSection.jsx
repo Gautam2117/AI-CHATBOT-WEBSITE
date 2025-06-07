@@ -37,8 +37,11 @@ const plans = [
 
 const PricingSection = () => {
   return (
-    <section id="pricing" className="py-20 bg-white px-4 sm:px-10 md:px-20">
-      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-12">
+    <section
+      id="pricing"
+      className="py-20 px-6 sm:px-10 md:px-20 bg-white dark:bg-gray-900 transition-colors duration-300"
+    >
+      <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-12">
         💸 Flexible Pricing for Everyone
       </h2>
 
@@ -46,38 +49,41 @@ const PricingSection = () => {
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`rounded-3xl p-8 shadow-lg border transition-all duration-300 transform hover:scale-105 ${
+            className={`rounded-3xl p-8 shadow-xl border transition-all duration-300 transform hover:scale-105 ${
               plan.highlight
-                ? "bg-indigo-600 text-white border-transparent"
-                : "bg-gray-50 text-gray-800"
+                ? "bg-indigo-600 text-white border-indigo-500"
+                : "bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700"
             }`}
           >
-            <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-            <p className="text-4xl font-bold mb-6">{plan.price}</p>
+            {plan.highlight && (
+              <div className="mb-3 inline-block bg-white text-indigo-600 font-semibold text-xs px-3 py-1 rounded-full shadow-md">
+                ⭐ Most Popular
+              </div>
+            )}
+            <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
+            <p className="text-4xl font-extrabold mb-6">{plan.price}</p>
 
             <ul className="space-y-3 mb-8">
               {plan.features.map((feature, idx) => (
                 <li
                   key={idx}
-                  className={`flex items-center text-sm ${
-                    plan.highlight ? "text-white" : "text-gray-700"
-                  }`}
+                  className="flex items-center text-sm"
                 >
-                  <span className="text-green-500 mr-2">✔</span>
-                  {feature}
+                  <span className="text-green-400 mr-2">✔</span>
+                  <span>{feature}</span>
                 </li>
               ))}
             </ul>
 
             <button
               aria-label={`Choose ${plan.name} plan`}
-              className={`w-full py-3 rounded-xl font-semibold text-lg transition ${
+              className={`w-full py-3 rounded-xl font-semibold text-lg transition-all ${
                 plan.highlight
                   ? "bg-white text-indigo-600 hover:bg-gray-100"
                   : "bg-indigo-600 text-white hover:bg-indigo-700"
               }`}
             >
-              {plan.name === "Free" ? "Start Free" : "Choose Plan"}
+              {plan.name === "Free" ? "Start Free" : `Get ${plan.name}`}
             </button>
           </div>
         ))}

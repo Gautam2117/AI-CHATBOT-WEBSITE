@@ -1,52 +1,70 @@
-// src/pages/Terms.jsx
 import React from "react";
 
 const Terms = () => {
   return (
     <div className="min-h-screen px-6 md:px-20 py-24 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-4xl font-extrabold text-indigo-600">Terms of Service</h1>
+        <h1 className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
+          Terms of Service
+        </h1>
 
-        <p>
-          Welcome to Botify! By using our website or services, you agree to comply with and be
-          bound by the following terms and conditions. Please review them carefully.
+        <p className="text-gray-700 dark:text-gray-300">
+          Welcome to <strong>Botify</strong>! By using our website or services, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.
         </p>
 
-        <h2 className="text-2xl font-bold mt-8">1. Acceptance of Terms</h2>
-        <p>
-          By accessing or using Botify, you agree to be legally bound by these terms. If you do not
-          agree to these terms, please do not use our services.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            1. Acceptance of Terms
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            By accessing or using Botify, you agree to be legally bound by these terms. If you do not agree with any part of the terms, please refrain from using our services.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-bold mt-8">2. Use License</h2>
-        <p>
-          Permission is granted to temporarily download one copy of Botify's materials for personal,
-          non-commercial use only. This is the grant of a license, not a transfer of title.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            2. Use License
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            Permission is granted to temporarily download one copy of Botify materials for personal, non-commercial use only. This license does not grant ownership or allow redistribution or commercial usage.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-bold mt-8">3. Disclaimer</h2>
-        <p>
-          The materials on Botify's website are provided “as is”. Botify makes no warranties,
-          expressed or implied.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            3. Disclaimer
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            All materials on Botify’s website are provided “as is.” Botify makes no warranties, either expressed or implied, and disclaims all other warranties including merchantability or fitness for a particular purpose.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-bold mt-8">4. Limitations</h2>
-        <p>
-          In no event shall Botify be liable for any damages arising out of the use or inability to
-          use the materials on its site.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            4. Limitations
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            In no event shall Botify or its suppliers be liable for any damages arising from the use or inability to use the services or materials on the website.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-bold mt-8">5. Modifications</h2>
-        <p>
-          Botify may revise these terms of service at any time without notice. By using this
-          platform, you agree to be bound by the current version.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            5. Modifications
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            Botify reserves the right to update or revise these terms at any time without prior notice. Continued use of the site means you accept the current terms.
+          </p>
+        </section>
 
-        <h2 className="text-2xl font-bold mt-8">6. Governing Law</h2>
-        <p>
-          Any claim relating to Botify shall be governed by the laws of India without regard to its
-          conflict of law provisions.
-        </p>
+        <section>
+          <h2 className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-8">
+            6. Governing Law
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            These terms are governed by the laws of India, without regard to conflict of law principles. Disputes arising from these terms will be handled in Indian jurisdiction.
+          </p>
+        </section>
       </div>
     </div>
   );

@@ -7,10 +7,8 @@ const StickyCTABar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsVisible(scrollY > 400); // show after 400px scroll
+      setIsVisible(window.scrollY > 400);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -18,14 +16,15 @@ const StickyCTABar = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-2xl z-50">
-      <div className="bg-indigo-600 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center justify-between gap-4">
-        <p className="font-semibold text-sm sm:text-base">
-          🚀 Ready to boost your support with Botify?
+    <div className="fixed bottom-6 left-0 right-0 px-4 sm:px-6 z-50 animate-fade-in-up">
+      <div className="max-w-2xl mx-auto bg-indigo-600 dark:bg-indigo-700 text-white px-6 py-4 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 transition-all duration-300">
+        <p className="font-semibold text-center sm:text-left text-sm sm:text-base">
+          🚀 Ready to boost your support with <strong>Botify</strong>?
         </p>
         <Link
-          to="/get-started"
-          className="bg-white text-indigo-600 font-semibold px-4 py-2 rounded-xl hover:bg-indigo-100 transition"
+          to="https://ai-chatbot-saas-eight.vercel.app/"
+          className="bg-white dark:bg-gray-100 text-indigo-600 font-semibold px-5 py-2 rounded-xl hover:bg-indigo-100 dark:hover:bg-gray-200 transition duration-300 text-sm sm:text-base"
+          aria-label="Get Started with Botify"
         >
           Get Started Free
         </Link>
