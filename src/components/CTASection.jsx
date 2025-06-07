@@ -19,7 +19,7 @@ const CTASection = () => {
         </p>
 
         <Link
-          to="/get-started"
+          to="https://ai-chatbot-saas-eight.vercel.app/"
           className="inline-block bg-white text-indigo-700 hover:text-white hover:bg-indigo-800 font-semibold py-3 px-8 rounded-xl shadow-xl transition-all duration-300 transform hover:scale-105 dark:bg-indigo-100 dark:hover:bg-indigo-700"
         >
           🚀 Get Started for Free
