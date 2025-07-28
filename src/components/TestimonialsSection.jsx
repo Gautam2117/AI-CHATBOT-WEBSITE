@@ -2,31 +2,25 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const TestimonialsSection = () => {
-  const testimonials = [
+  const TestimonialsSection = () => {
+    const testimonials = [
     {
-      name: "Sarah Thompson",
-      role: "Founder, Craftsy",
+      name: "Early User",
+      role: "E-commerce Store Owner",
       feedback:
-        "Botify has transformed our customer support. Our response time has dropped significantly, and our customers love the instant replies!",
+        "Botify feels like having an extra teammate. Can’t wait to use it more once it launches publicly!",
     },
     {
-      name: "David Chen",
-      role: "CTO, FinlyTech",
+      name: "Beta Tester",
+      role: "Startup Founder",
       feedback:
-        "Integrating Botify was smooth and simple. The AI handles most repetitive queries, freeing up our team to focus on complex tasks.",
+        "Even in testing, Botify impressed us. Setup was smooth and responses were blazing fast.",
     },
     {
-      name: "Amina Khan",
-      role: "Product Manager, ShopZen",
+      name: "Preview Access User",
+      role: "Customer Support Lead",
       feedback:
-        "We saw a 30% drop in customer churn within weeks of using Botify. Highly recommend it for any growing business!",
-    },
-    {
-      name: "Leo Marshall",
-      role: "Support Head, HealthHive",
-      feedback:
-        "With Botify, our night support is fully automated and reliable. Our NPS score has skyrocketed!",
+        "Looking forward to integrating this fully. Our support load could be cut in half!",
     },
   ];
 
