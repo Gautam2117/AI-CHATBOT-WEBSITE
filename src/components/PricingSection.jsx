@@ -5,7 +5,7 @@ const plans = [
     name: "Free",
     price: "₹0",
     features: [
-      "2,000 tokens/day",
+      "1,000 tokens/day",
       "Basic Support",
       "Community Access",
     ],
@@ -13,9 +13,9 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "₹99/month",
+    price: "₹149/month",
     features: [
-      "5,000 tokens/day",
+      "10,000 tokens/day",
       "Priority Support",
       "Advanced Analytics",
       "Chat Widget Customization",
@@ -24,9 +24,9 @@ const plans = [
   },
   {
     name: "Unlimited",
-    price: "₹249/month",
+    price: "₹399/month",
     features: [
-      "Unlimited tokens/day",
+      "Unlimited tokens/day (Fair Use: 2M/month)",
       "Premium Support",
       "White-label Branding",
       "Full Feature Access",

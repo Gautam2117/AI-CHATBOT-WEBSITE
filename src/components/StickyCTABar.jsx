@@ -1,4 +1,3 @@
-// src/components/StickyCTABar.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -16,8 +15,8 @@ const StickyCTABar = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 px-4 sm:px-6 z-50 animate-fade-in-up">
-      <div className="max-w-2xl mx-auto bg-indigo-600 dark:bg-indigo-700 text-white px-6 py-4 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 transition-all duration-300">
+    <div className="fixed bottom-6 left-0 right-0 px-4 sm:px-6 z-50 pointer-events-none">
+      <div className="max-w-2xl mx-auto bg-indigo-600 dark:bg-indigo-700 text-white px-6 py-4 rounded-2xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 transition-all duration-300 pointer-events-auto">
         <p className="font-semibold text-center sm:text-left text-sm sm:text-base">
           🚀 Ready to boost your support with <strong>Botify</strong>?
         </p>

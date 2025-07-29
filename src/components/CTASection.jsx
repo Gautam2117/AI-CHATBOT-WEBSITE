@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const CTASection = () => {
   return (
-    <section className="relative bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-600 text-white py-20 px-6 md:px-20 text-center rounded-t-3xl overflow-hidden shadow-inner dark:shadow-md mb-10">
+    <section className="relative bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-600 text-white py-20 px-6 md:px-20 text-center rounded-t-3xl overflow-hidden shadow-inner dark:shadow-md">
       {/* Moving Background Pattern */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-noise.png')] bg-cover bg-center opacity-10 animate-pulse pointer-events-none" />
 
