@@ -23,10 +23,10 @@ const plans = [
     highlight: true,
   },
   {
-    name: "Unlimited",
+    name: "Pro Max",
     price: "₹399/month",
     features: [
-      "Unlimited tokens/day (Fair Use: 2M/month)",
+      "Up to 2M tokens/month",
       "Premium Support",
       "White-label Branding",
       "Full Feature Access",
