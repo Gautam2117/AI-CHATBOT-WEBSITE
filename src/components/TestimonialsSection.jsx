@@ -1,5 +1,6 @@
+// src/components/TestimonialsSection.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight, FaQuoteLeft } from "react-icons/fa";
 
 const testimonials = [
@@ -47,88 +48,183 @@ const testimonials = [
   },
 ];
 
-const TestimonialsSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const intervalRef = useRef(null);
+const variants = {
+  enter: { opacity: 0, y: 16, scale: 0.985, filter: "blur(4px)" },
+  center: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -16, scale: 0.985, filter: "blur(4px)" },
+};
 
-  const scroll = (direction) => {
-    setCurrentIndex((prev) =>
-      direction === "left"
-        ? (prev - 1 + testimonials.length) % testimonials.length
-        : (prev + 1) % testimonials.length
+export default function TestimonialsSection() {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const sectionRef = useRef(null);
+  const touchStartX = useRef(null);
+  const prefersReduced = useReducedMotion();
+
+  const go = (dir) =>
+    setIndex((i) =>
+      dir === "left"
+        ? (i - 1 + testimonials.length) % testimonials.length
+        : (i + 1) % testimonials.length
     );
-  };
 
+  // Autoplay (pause on hover/blur/out-of-view)
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      scroll("right");
-    }, 6000);
+    if (prefersReduced || paused) return;
+    const id = setInterval(() => go("right"), 6000);
+    return () => clearInterval(id);
+  }, [paused, prefersReduced]);
 
-    return () => clearInterval(intervalRef.current);
+  // Pause when section not visible
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => setPaused(!entry.isIntersecting),
+      { threshold: 0.25 }
+    );
+    io.observe(node);
+    return () => io.disconnect();
   }, []);
 
+  // Pause when tab hidden
+  useEffect(() => {
+    const onVis = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  // Keyboard arrows
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowLeft") go("left");
+      if (e.key === "ArrowRight") go("right");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Touch swipe
+  const onTouchStart = (e) => (touchStartX.current = e.touches[0].clientX);
+  const onTouchEnd = (e) => {
+    if (touchStartX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const threshold = 42;
+    if (dx > threshold) go("left");
+    else if (dx < -threshold) go("right");
+    touchStartX.current = null;
+  };
+
+  const t = testimonials[index];
+
   return (
-    <section className="relative py-20 bg-white dark:bg-gray-900 px-6 md:px-20 transition-colors duration-300">
+    <section
+      ref={sectionRef}
+      className="relative py-20 px-6 md:px-20 bg-gradient-to-b from-white via-indigo-50/40 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Customer testimonials"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-14">
         🌟 What Our Users Say
       </h2>
 
       <div className="relative max-w-4xl mx-auto">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-gradient-to-br from-indigo-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-3xl p-10 shadow-xl text-center"
-        >
-          <FaQuoteLeft className="text-indigo-400 dark:text-indigo-500 text-4xl mb-4 mx-auto" />
-          <p className="text-lg text-gray-700 dark:text-gray-300 italic leading-relaxed mb-6">
-            “{testimonials[currentIndex].feedback}”
-          </p>
-          <div className="text-indigo-700 dark:text-indigo-400 font-semibold text-xl">
-            {testimonials[currentIndex].name}
-          </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {testimonials[currentIndex].role}
-          </p>
-        </motion.div>
+        {/* Fancy gradient ring + glass card */}
+        <div className="rounded-[26px] p-[1.4px] bg-gradient-to-br from-indigo-400/70 via-fuchsia-400/70 to-sky-400/70 shadow-[0_20px_60px_rgba(2,6,23,.20)]">
+          <div className="rounded-[24px] bg-white/85 dark:bg-gray-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 px-6 sm:px-10 py-10">
+            {/* Soft ambient blobs */}
+            <div className="pointer-events-none absolute -z-10 -inset-10 opacity-60">
+              <div className="absolute -top-16 left-10 w-44 h-44 rounded-full bg-indigo-500/15 blur-2xl" />
+              <div className="absolute -bottom-14 right-6 w-44 h-44 rounded-full bg-fuchsia-500/15 blur-2xl" />
+            </div>
 
-        {/* Arrows */}
-        <div className="absolute inset-0 flex items-center justify-between px-2 md:px-4">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.figure
+                key={index}
+                variants={prefersReduced ? {} : variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: prefersReduced ? 0 : 0.4, ease: "easeOut" }}
+                className="text-center"
+                aria-live="polite"
+              >
+                <FaQuoteLeft className="text-indigo-400 dark:text-indigo-500 text-4xl mb-4 mx-auto drop-shadow-sm" />
+                <blockquote className="text-lg md:text-xl text-gray-700 dark:text-gray-300 italic leading-relaxed">
+                  “{t.feedback}”
+                </blockquote>
+
+                {/* rating stars for vibe */}
+                <div className="mt-5 flex items-center justify-center gap-1 text-amber-400" aria-hidden="true">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 .587l3.668 7.431L24 9.748l-6 5.85 1.417 8.263L12 19.771l-7.417 4.09L6 15.598 0 9.748l8.332-1.73z" />
+                    </svg>
+                  ))}
+                </div>
+
+                <figcaption className="mt-5">
+                  <div className="flex items-center justify-center gap-3">
+                    {/* Avatar initials with gradient */}
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white grid place-items-center text-sm font-bold shadow">
+                      {t.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                    </div>
+                    <div className="text-left">
+                      <div className="text-indigo-700 dark:text-indigo-300 font-semibold text-lg">
+                        {t.name}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t.role}</div>
+                    </div>
+                  </div>
+                </figcaption>
+              </motion.figure>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="absolute inset-0 flex items-center justify-between px-1 sm:px-3">
           <button
-            onClick={() => scroll("left")}
-            className="p-3 rounded-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-md hover:scale-110 transition"
-            aria-label="Previous Testimonial"
+            onClick={() => go("left")}
+            className="p-3 rounded-full bg-white/90 dark:bg-gray-800/90 text-indigo-600 dark:text-indigo-400 shadow-md hover:scale-110 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            aria-label="Previous testimonial"
           >
             <FaChevronLeft />
           </button>
           <button
-            onClick={() => scroll("right")}
-            className="p-3 rounded-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-md hover:scale-110 transition"
-            aria-label="Next Testimonial"
+            onClick={() => go("right")}
+            className="p-3 rounded-full bg-white/90 dark:bg-gray-800/90 text-indigo-600 dark:text-indigo-400 shadow-md hover:scale-110 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            aria-label="Next testimonial"
           >
             <FaChevronRight />
           </button>
         </div>
 
-        {/* Dot Navigation */}
+        {/* Dots */}
         <div className="flex justify-center gap-2 mt-6">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentIndex(i)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                currentIndex === i
-                  ? "bg-indigo-600 dark:bg-indigo-400"
-                  : "bg-indigo-200 dark:bg-indigo-700"
-              }`}
-              aria-label={`Go to testimonial ${i + 1}`}
-            />
-          ))}
+          {testimonials.map((_, i) => {
+            const active = i === index;
+            return (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
+                aria-current={active ? "true" : "false"}
+                className={`h-[10px] rounded-full transition-all ${
+                  active
+                    ? "w-6 bg-indigo-600 dark:bg-indigo-400"
+                    : "w-2.5 bg-indigo-200 dark:bg-indigo-700 hover:bg-indigo-300 dark:hover:bg-indigo-600"
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
   );
-};
-
-export default TestimonialsSection;
+}

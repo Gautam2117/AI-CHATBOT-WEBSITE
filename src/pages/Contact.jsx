@@ -1,25 +1,74 @@
-import React, { useState } from "react";
+// src/pages/Contact.jsx
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
-const Contact = () => {
+const MAX_LEN = 1000;
+
+export default function Contact() {
   const [formData, setFormData] = useState({
     from_name: "",
     from_email: "",
     message: "",
     time: new Date().toLocaleString(),
+    // honeypot (spam trap) – do not remove
+    company: "",
   });
-  const [status, setStatus] = useState(null);
+
+  const [status, setStatus] = useState(null); // "loading" | "success" | "error" | null
+  const [errors, setErrors] = useState({});
+  const liveRegionRef = useRef(null);
+
+  const suggestions = useMemo(
+    () => [
+      "I want to integrate the widget on my site",
+      "Do you have a startup discount?",
+      "Can Botify answer questions from my FAQs?",
+      "What’s included in Pro vs Pro Max?",
+    ],
+    []
+  );
+
+  // a11y: announce status changes
+  useEffect(() => {
+    if (!status || !liveRegionRef.current) return;
+    const msg =
+      status === "loading"
+        ? "Sending message…"
+        : status === "success"
+        ? "Message sent successfully."
+        : "Sending failed. Please try again.";
+    liveRegionRef.current.textContent = msg;
+  }, [status]);
+
+  const validate = () => {
+    const next = {};
+    if (!formData.from_name.trim()) next.from_name = "Please enter your name.";
+    if (!formData.from_email.trim()) next.from_email = "Please enter your email.";
+    else if (!/^\S+@\S+\.\S+$/.test(formData.from_email))
+      next.from_email = "Please enter a valid email.";
+    if (!formData.message.trim()) next.message = "Tell us a little about your request.";
+    if (formData.message.length > MAX_LEN) next.message = `Please keep it under ${MAX_LEN} characters.`;
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setStatus(null); // reset status on new input
+    setFormData((s) => ({ ...s, [e.target.name]: e.target.value }));
+    setStatus(null);
+  };
+
+  const handleSuggestion = (text) => {
+    setFormData((s) => ({ ...s, message: s.message ? `${s.message}\n\n${text}` : text }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus(null);
+
+    // honeypot: if filled, silently ignore
+    if (formData.company) return;
+
+    if (!validate()) return;
     setStatus("loading");
 
     try {
@@ -35,97 +84,260 @@ const Contact = () => {
         from_email: "",
         message: "",
         time: "",
+        company: "",
       });
-    } catch (error) {
-      console.error("EmailJS error:", error);
+      setErrors({});
+    } catch (err) {
+      console.error("EmailJS error:", err);
       setStatus("error");
     }
   };
 
+  const remaining = MAX_LEN - formData.message.length;
+  const sending = status === "loading";
+
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 px-6 md:px-20 pt-24 pb-16 transition-colors duration-300">
-      <h1 className="text-4xl font-extrabold text-center text-indigo-700 dark:text-white mb-10">
-        📬 Get in Touch
-      </h1>
+    <div className="relative min-h-screen px-6 md:px-20 pt-24 pb-16 bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors">
+      {/* Ambient aurora / brand glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,.12),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,.10),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(14,165,233,.10),transparent_55%)]" />
+        <div className="absolute -top-24 -left-24 w-[36rem] h-[36rem] rounded-full bg-indigo-500/15 blur-3xl animate-[pulse_10s_ease-in-out_infinite]" />
+        <div className="absolute -bottom-24 right-0 w-[28rem] h-[28rem] rounded-full bg-sky-400/15 blur-3xl animate-[pulse_12s_ease-in-out_infinite_reverse]" />
+      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-lg space-y-6"
-      >
-        {/* Name */}
-        <div>
-          <label htmlFor="from_name" className="block font-semibold text-gray-700 dark:text-gray-200 mb-1">
-            Name
-          </label>
-          <input
-            id="from_name"
-            type="text"
-            name="from_name"
-            value={formData.from_name}
-            onChange={handleChange}
-            required
-            aria-label="Name"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-          />
+      <header className="text-center max-w-2xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/70 dark:bg-white/10 backdrop-blur border border-white/50 dark:border-white/10 text-xs font-semibold text-indigo-700 dark:text-indigo-200">
+          <span>🤖</span> Chat with Botify Team
+        </div>
+        <h1 className="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">
+          Let’s talk about{" "}
+          <span className="bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-sky-500 text-transparent bg-clip-text">
+            your use case
+          </span>
+          .
+        </h1>
+        <p className="mt-3 text-gray-600 dark:text-gray-300">
+          Tell us what you’re building and we’ll help you get there faster.
+        </p>
+      </header>
+
+      <div className="mt-10 grid lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+        {/* Contact form (glass card with gradient ring) */}
+        <div className="lg:col-span-3">
+          <div className="rounded-[22px] p-[1.4px] bg-gradient-to-br from-indigo-400/60 via-fuchsia-400/60 to-sky-400/60 shadow-[0_18px_44px_rgba(2,6,23,.12)]">
+            <form
+              onSubmit={handleSubmit}
+              className="rounded-[20px] bg-white/85 dark:bg-gray-900/80 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6 md:p-8 space-y-6"
+              noValidate
+            >
+              {/* a11y live region */}
+              <p ref={liveRegionRef} role="status" aria-live="polite" className="sr-only" />
+
+              {/* Honeypot field (hidden) */}
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+
+              {/* Name */}
+              <div>
+                <label
+                  htmlFor="from_name"
+                  className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1.5"
+                >
+                  Your name
+                </label>
+                <input
+                  id="from_name"
+                  name="from_name"
+                  type="text"
+                  value={formData.from_name}
+                  onChange={handleChange}
+                  required
+                  aria-invalid={!!errors.from_name}
+                  aria-describedby={errors.from_name ? "name-err" : undefined}
+                  className={`w-full px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 border ${
+                    errors.from_name
+                      ? "border-rose-500 focus:ring-rose-500/40"
+                      : "border-gray-300 dark:border-gray-600 focus:ring-indigo-500/40"
+                  } outline-none focus:ring-2 transition`}
+                  placeholder="Jane Doe"
+                />
+                {errors.from_name && (
+                  <p id="name-err" className="mt-1 text-sm text-rose-500">
+                    {errors.from_name}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="from_email"
+                  className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1.5"
+                >
+                  Email
+                </label>
+                <input
+                  id="from_email"
+                  name="from_email"
+                  type="email"
+                  value={formData.from_email}
+                  onChange={handleChange}
+                  required
+                  aria-invalid={!!errors.from_email}
+                  aria-describedby={errors.from_email ? "email-err" : undefined}
+                  className={`w-full px-4 py-2.5 rounded-xl bg-white dark:bg-gray-800 border ${
+                    errors.from_email
+                      ? "border-rose-500 focus:ring-rose-500/40"
+                      : "border-gray-300 dark:border-gray-600 focus:ring-indigo-500/40"
+                  } outline-none focus:ring-2 transition`}
+                  placeholder="you@company.com"
+                />
+                {errors.from_email && (
+                  <p id="email-err" className="mt-1 text-sm text-rose-500">
+                    {errors.from_email}
+                  </p>
+                )}
+              </div>
+
+              {/* Message + counter + suggestions chips */}
+              <div>
+                <div className="flex items-end justify-between">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1.5"
+                  >
+                    How can we help?
+                  </label>
+                  <span
+                    className={`text-xs ${
+                      remaining < 0 ? "text-rose-500" : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    {Math.max(remaining, 0)} / {MAX_LEN}
+                  </span>
+                </div>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={6}
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  aria-invalid={!!errors.message}
+                  aria-describedby={errors.message ? "msg-err" : undefined}
+                  maxLength={MAX_LEN + 1}
+                  className={`w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border ${
+                    errors.message
+                      ? "border-rose-500 focus:ring-rose-500/40"
+                      : "border-gray-300 dark:border-gray-600 focus:ring-indigo-500/40"
+                  } outline-none focus:ring-2 transition resize-none`}
+                  placeholder="Tell us about your project, use case, or timeline…"
+                  onKeyDown={(e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "enter") {
+                      handleSubmit(e);
+                    }
+                  }}
+                />
+                {errors.message && (
+                  <p id="msg-err" className="mt-1 text-sm text-rose-500">
+                    {errors.message}
+                  </p>
+                )}
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => handleSuggestion(s)}
+                      className="text-xs px-3 py-1.5 rounded-full border border-indigo-300/60 dark:border-indigo-600/40 text-indigo-700 dark:text-indigo-200 hover:bg-indigo-50/70 dark:hover:bg-white/5 transition"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Submit + status */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/40
+                    ${sending ? "opacity-80 cursor-not-allowed" : ""}
+                    bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600`}
+                >
+                  {sending ? (
+                    <>
+                      <span className="inline-block w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />
+                      Sending…
+                    </>
+                  ) : (
+                    <>Send Message</>
+                  )}
+                </button>
+
+                {status === "success" && (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                    ✅ Sent! We’ll get back soon.
+                  </span>
+                )}
+                {status === "error" && (
+                  <span className="text-rose-600 dark:text-rose-400 font-medium">
+                    ❌ Something went wrong. Please try again.
+                  </span>
+                )}
+              </div>
+
+              <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                By submitting, you agree to our data handling. We’ll only use your info to reply to this
+                inquiry.
+              </p>
+            </form>
+          </div>
         </div>
 
-        {/* Email */}
-        <div>
-          <label htmlFor="from_email" className="block font-semibold text-gray-700 dark:text-gray-200 mb-1">
-            Email
-          </label>
-          <input
-            id="from_email"
-            type="email"
-            name="from_email"
-            value={formData.from_email}
-            onChange={handleChange}
-            required
-            aria-label="Email"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-          />
-        </div>
+        {/* Right rail: helpful info / alt contact */}
+        <aside className="lg:col-span-2 space-y-4">
+          <div className="rounded-2xl bg-white/85 dark:bg-gray-900/70 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 grid place-items-center rounded-xl bg-indigo-600/10 text-indigo-700 dark:text-indigo-300">
+                🤖
+              </div>
+              <div>
+                <div className="font-semibold">Botify Support</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Average reply: under 24 hours</div>
+              </div>
+            </div>
+            <ul className="mt-4 text-sm text-gray-700 dark:text-gray-300 space-y-2">
+              <li>• Priority replies for Pro & Pro Max</li>
+              <li>• Attach links or public docs in your message</li>
+              <li>• For billing, include your workspace email</li>
+            </ul>
+          </div>
 
-        {/* Message */}
-        <div>
-          <label htmlFor="message" className="block font-semibold text-gray-700 dark:text-gray-200 mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            rows={5}
-            aria-label="Message"
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white resize-none"
-          ></textarea>
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {status === "loading" ? "Sending..." : "Send Message"}
-        </button>
-
-        {/* Feedback */}
-        {status === "success" && (
-          <p className="text-green-600 dark:text-green-400 font-medium">
-            ✅ Message sent successfully!
-          </p>
-        )}
-        {status === "error" && (
-          <p className="text-red-600 dark:text-red-400 font-medium">
-            ❌ Something went wrong. Please try again.
-          </p>
-        )}
-      </form>
+          <div className="rounded-2xl bg-white/85 dark:bg-gray-900/70 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6">
+            <div className="font-semibold">Prefer email?</div>
+            <a
+              href="mailto:botify.assist@gmail.com"
+              className="mt-1 inline-block text-indigo-700 dark:text-indigo-300 hover:underline"
+            >
+              botify.assist@gmail.com
+            </a>
+            <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+              We’ll route your note to the right human. Promise no bots on billing issues 😉
+            </p>
+          </div>
+        </aside>
+      </div>
     </div>
   );
-};
-
-export default Contact;
+}

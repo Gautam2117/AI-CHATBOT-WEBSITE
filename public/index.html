@@ -2,39 +2,109 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Modern favicon format -->
+
+    <!-- Prevent dark/light theme flash before React mounts -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (t === "dark" || (!t && prefersDark)) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Botify – AI Chatbot for Sales & Support</title>
+
+    <!-- Favicon / Icons -->
     <link rel="icon" type="image/png" href="/Botify_logo.png" />
-
-    <!-- Optional: ICO fallback -->
     <link rel="icon" type="image/x-icon" href="/Botify_logo.ico" />
+    <!-- If you add PWA icons later, keep these (safe if missing) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-title" content="Botify" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Basic SEO -->
+    <meta name="description" content="Botify – AI Chatbot for Sales, Support & Lead Capture" />
+    <meta name="keywords" content="AI chatbot, customer support, lead capture, Botify, automation" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://botify-website.vercel.app/" />
 
-    <!-- SEO -->
-    <meta name="description" content="Botify – AI Chatbot for Sales, Support & Lead Capture">
-    <meta property="og:title" content="Botify – AI Chatbot for Sales & Support" />
-    <meta property="og:description" content="Boost your business with AI-powered conversations, 24/7 automation, and smart lead generation." />
-    <meta property="og:image" content="botify-website.vercel.app/og-image.png" />
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Botify" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://botify-website.vercel.app/" />
+    <meta property="og:title" content="Botify – AI Chatbot for Sales & Support" />
+    <meta property="og:description" content="Boost your business with AI-powered conversations, 24/7 automation, and smart lead generation." />
+    <meta property="og:image" content="https://botify-website.vercel.app/og-image.png" />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://botify-website.vercel.app/" />
     <meta name="twitter:title" content="Botify – AI Chatbot for Sales & Support" />
     <meta name="twitter:description" content="Automate customer service and boost sales with Botify AI." />
     <meta name="twitter:image" content="https://botify-website.vercel.app/og-image.png" />
 
-    <!-- Google Analytics -->
+    <!-- Performance: preconnect to GA -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    <!-- Analytics (async) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TC11BPJXDF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag(){ dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', 'G-TC11BPJXDF');
     </script>
 
-    <title>Botify – AI Chatbot for Sales & Support</title>
+    <!-- JSON-LD: SoftwareApplication snippet (helps rich results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Botify",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://botify-website.vercel.app/",
+      "image": "https://botify-website.vercel.app/og-image.png",
+      "description": "AI chatbot that automates support, captures leads, and powers 24/7 conversations.",
+      "offers": [
+        { "@type": "Offer", "price": "0", "priceCurrency": "INR", "name": "Free" },
+        { "@type": "Offer", "price": "149", "priceCurrency": "INR", "name": "Pro" },
+        { "@type": "Offer", "price": "399", "priceCurrency": "INR", "name": "Pro Max" }
+      ],
+      "publisher": { "@type": "Organization", "name": "Botify" }
+    }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- Your app entry -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Optional: register service worker if you added /public/sw.js -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js").catch(function(){});
+        });
+      }
+    </script>
+
+    <noscript>
+      <style>
+        html { background: #fff; color: #111; }
+        @media (prefers-color-scheme: dark) { html { background: #0b0f1a; color: #fff; } }
+      </style>
+      Please enable JavaScript to run this app.
+    </noscript>
   </body>
 </html>
