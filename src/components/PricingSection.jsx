@@ -1,81 +1,100 @@
 // src/components/PricingSection.jsx
 import React, { useMemo, useState } from "react";
-import { CheckCircle2, Crown, Sparkles, Rocket, Info } from "lucide-react";
+import {
+  CheckCircle2,
+  Crown,
+  Sparkles,
+  Rocket,
+  Info,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
+/* -------------------------------------------------------------------------- */
+/*  SINGLE SOURCE OF TRUTH – keep in sync with server.js PLAN_CATALOG values  */
+/* -------------------------------------------------------------------------- */
 const RAW_PLANS = [
+  /* ────────── Free ────────── */
   {
     id: "free",
     name: "Free",
-    tagline: "Kick the tires",
+    tagline: "Kick the tyres",
     monthly: 0,
-    yearly: 0, // same as monthly for free
+    yearly: 0,
     features: [
-      "1,000 tokens/day",
-      "Basic Support",
-      "Community Access",
+      "150 messages / month",
+      "Basic support",
+      "Community access",
     ],
     cta: "Start Free",
     popular: false,
   },
+
+  /* ────────── Pro ────────── */
   {
     id: "pro",
     name: "Pro",
     tagline: "For growing teams",
-    monthly: 149,
-    yearly: 149 * 10, // 2 months free on yearly
+    monthly: 6_499,          // ₹6 499 / mo
+    yearly: 6_499 * 10,      // 2 months free on yearly
     features: [
-      "10,000 tokens/day",
-      "Priority Support",
-      "Advanced Analytics",
-      "Chat Widget Customization",
+      "3 000 messages / month",
+      "Priority support",
+      "Advanced analytics",
+      "Chat-widget customisation",
     ],
     cta: "Go Pro",
     popular: true,
   },
+
+  /* ────────── Pro Max ────────── */
   {
     id: "pro-max",
     name: "Pro Max",
     tagline: "Scale without limits",
-    monthly: 399,
-    yearly: 399 * 10, // 2 months free on yearly
+    monthly: 19_999,         // ₹19 999 / mo
+    yearly: 19_999 * 10,     // 2 months free on yearly
     features: [
-      "Up to 2M tokens/month",
-      "Premium Support",
-      "White-label Branding",
-      "Full Feature Access",
+      "15 000 messages / month",
+      "Premium support",
+      "White-label branding",
+      "Full feature access",
     ],
     cta: "Choose Pro Max",
     popular: false,
   },
 ];
 
+/* -------------------------------- helpers -------------------------------- */
 function Badge({ children, tone = "indigo" }) {
   const palette =
     tone === "gold"
       ? "from-amber-400 via-yellow-400 to-amber-500 text-amber-900"
       : "from-indigo-500 via-fuchsia-500 to-sky-500 text-white";
   return (
-    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-gradient-to-r ${palette} shadow-sm`}>
+    <span
+      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-gradient-to-r ${palette} shadow-sm`}
+    >
       {children}
     </span>
   );
 }
 
+/* ================================ main =================================== */
 export default function PricingSection() {
   const [billing, setBilling] = useState("monthly"); // 'monthly' | 'yearly'
   const currency = "₹";
 
   const plans = useMemo(() => RAW_PLANS, []);
 
-  const priceFor = (p) =>
-    billing === "monthly" ? p.monthly : p.yearly;
-
-  const perText = billing === "monthly" ? "/month" : "/year";
+  const priceFor = (p) => (billing === "monthly" ? p.monthly : p.yearly);
+  const perText  = billing === "monthly" ? "/month" : "/year";
 
   return (
-    <section id="pricing" className="relative py-20 px-6 sm:px-10 md:px-20">
-      {/* subtle aurora */}
+    <section
+      id="pricing"
+      className="relative py-20 px-6 sm:px-10 md:px-20"
+    >
+      {/* background aurora */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,58,237,.10),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,.10),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(14,165,233,.08),transparent_55%)]" />
         <div className="absolute -top-24 -left-24 w-[40rem] h-[40rem] rounded-full bg-indigo-500/10 blur-3xl" />
@@ -92,42 +111,44 @@ export default function PricingSection() {
             Start free. Scale when you’re ready. No contracts. Cancel anytime.
           </p>
 
-          {/* Perks row */}
+          {/* Perks */}
           <div className="mt-4 flex items-center justify-center gap-2 text-xs">
-            <span className="px-2.5 py-1 rounded-full bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 text-gray-700 dark:text-gray-300">No credit card required</span>
-            <span className="px-2.5 py-1 rounded-full bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 text-gray-700 dark:text-gray-300">Set up in minutes</span>
-            <span className="px-2.5 py-1 rounded-full bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 text-gray-700 dark:text-gray-300">Cancel anytime</span>
+            {["No credit card required", "Set up in minutes", "Cancel anytime"].map(
+              (t) => (
+                <span
+                  key={t}
+                  className="px-2.5 py-1 rounded-full bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 text-gray-700 dark:text-gray-300"
+                >
+                  {t}
+                </span>
+              )
+            )}
           </div>
         </div>
 
         {/* Billing toggle */}
         <div className="flex items-center justify-center mb-10">
           <div className="inline-flex items-center gap-2 p-1 rounded-xl bg-white/80 dark:bg-gray-900/70 backdrop-blur border border-white/60 dark:border-white/10 shadow">
-            <button
-              onClick={() => setBilling("monthly")}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                billing === "monthly"
-                  ? "bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600 text-white shadow"
-                  : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300"
-              }`}
-              aria-pressed={billing === "monthly"}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling("yearly")}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition relative ${
-                billing === "yearly"
-                  ? "bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600 text-white shadow"
-                  : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300"
-              }`}
-              aria-pressed={billing === "yearly"}
-            >
-              Yearly
-              <span className="ml-2 inline-flex items-center gap-1 text-[10px] px-2 py-[2px] rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                <Sparkles size={12} /> 2 months free
-              </span>
-            </button>
+            {["monthly", "yearly"].map((key) => (
+              <button
+                key={key}
+                onClick={() => setBilling(key)}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                  billing === key
+                    ? "bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600 text-white shadow"
+                    : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-300"
+                }`}
+              >
+                {key === "monthly" ? "Monthly" : (
+                  <>
+                    Yearly
+                    <span className="ml-2 inline-flex items-center gap-1 text-[10px] px-2 py-[2px] rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                      <Sparkles size={12} /> 2 months free
+                    </span>
+                  </>
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -135,7 +156,7 @@ export default function PricingSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {plans.map((p) => {
             const isPopular = p.popular;
-            const price = priceFor(p);
+            const price     = priceFor(p);
             const showSlash = billing === "yearly" && p.monthly > 0;
 
             return (
@@ -148,16 +169,22 @@ export default function PricingSection() {
                 } shadow-[0_16px_40px_rgba(2,6,23,0.12)]`}
               >
                 <div className="rounded-3xl h-full bg-white/85 dark:bg-gray-900/85 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6 flex flex-col">
-                  {/* Top badge */}
+                  {/* Badge row */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {isPopular ? (
-                        <Badge tone="gold"><Crown size={14} /> Most Popular</Badge>
+                        <Badge tone="gold">
+                          <Crown size={14} /> Most Popular
+                        </Badge>
                       ) : (
-                        <Badge><Rocket size={14} /> Great Value</Badge>
+                        <Badge>
+                          <Rocket size={14} /> Great Value
+                        </Badge>
                       )}
                     </div>
-                    <span className="text-[11px] text-gray-500 dark:text-gray-400">{p.tagline}</span>
+                    <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                      {p.tagline}
+                    </span>
                   </div>
 
                   {/* Title + price */}
@@ -167,10 +194,14 @@ export default function PricingSection() {
                     </h3>
                     <div className="mt-2 flex items-end gap-2">
                       <div className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                        {price === 0 ? "Free" : `${currency}${price.toLocaleString()}`}
+                        {price === 0
+                          ? "Free"
+                          : `${currency}${price.toLocaleString()}`}
                       </div>
                       {price !== 0 && (
-                        <span className="text-sm text-gray-600 dark:text-gray-300">{perText}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
+                          {perText}
+                        </span>
                       )}
                     </div>
 
@@ -179,7 +210,8 @@ export default function PricingSection() {
                         <Info size={12} />
                         <span>
                           Normally {currency}
-                          {(p.monthly * 12).toLocaleString()} /yr — you save {currency}
+                          {(p.monthly * 12).toLocaleString()}/yr — you save{" "}
+                          {currency}
                           {((p.monthly * 12) - p.yearly).toLocaleString()}
                         </span>
                       </div>
@@ -190,7 +222,10 @@ export default function PricingSection() {
                   <ul className="mt-6 space-y-3 text-sm text-gray-700 dark:text-gray-200">
                     {p.features.map((f) => (
                       <li key={f} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="text-emerald-500 mt-[2px]" />
+                        <CheckCircle2
+                          size={18}
+                          className="text-emerald-500 mt-[2px]"
+                        />
                         <span>{f}</span>
                       </li>
                     ))}
@@ -199,25 +234,23 @@ export default function PricingSection() {
                   {/* CTA */}
                   <div className="mt-8">
                     {p.id === "free" ? (
-                      <a
-                        href="https://ai-chatbot-saas-eight.vercel.app/"
+                      <Link
+                        to="/signup"
                         className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
-                        aria-label={`Choose ${p.name} plan`}
                       >
                         {p.cta}
-                      </a>
+                      </Link>
                     ) : (
-                      <a
-                        href="https://ai-chatbot-saas-eight.vercel.app/"
+                      <Link
+                        to="/signup"
                         className={`w-full inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold transition ${
                           isPopular
                             ? "bg-white text-indigo-700 hover:bg-gray-50 shadow"
                             : "text-white shadow-lg hover:shadow-xl bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
                         }`}
-                        aria-label={`Choose ${p.name} plan`}
                       >
                         {p.cta}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </div>
@@ -229,13 +262,14 @@ export default function PricingSection() {
         {/* Included in all plans */}
         <div className="mt-10 rounded-2xl p-5 bg-white/80 dark:bg-gray-900/70 backdrop-blur-xl border border-white/60 dark:border-white/10">
           <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
-            Included in all plans: GDPR-ready, role-based access, API & webhooks, and analytics dashboard.
+            Included in all plans: GDPR-ready, role-based access, API &amp;
+            webhooks, and analytics dashboard.
           </p>
         </div>
 
-        {/* Tiny footnotes */}
+        {/* Footnotes */}
         <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-          Prices in INR. Taxes may apply. Usage limits reset daily/monthly depending on plan.
+          Prices in INR. Taxes may apply. Message quotas reset monthly.
         </p>
 
         {/* Help CTA */}
