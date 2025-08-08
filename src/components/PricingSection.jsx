@@ -6,12 +6,13 @@ import {
   Sparkles,
   Rocket,
   Info,
+  TrendingUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-/* -------------------------------------------------------------------------- */
-/*  SINGLE SOURCE OF TRUTH – keep in sync with server.js PLAN_CATALOG values  */
-/* -------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
+/*  SINGLE SOURCE OF TRUTH — keep in sync with server-side PLAN_CATALOG data  */
+/* ------------------------------------------------------------------------- */
 const RAW_PLANS = [
   /* ────────── Free ────────── */
   {
@@ -22,44 +23,64 @@ const RAW_PLANS = [
     yearly: 0,
     features: [
       "150 messages / month",
-      "Basic support",
-      "Community access",
+      "Botify branding",
+      "Basic analytics",
+      "Community support",
     ],
     cta: "Start Free",
     popular: false,
   },
 
-  /* ────────── Pro ────────── */
+  /* ────────── Starter (3 k) ────────── */
   {
-    id: "pro",
-    name: "Pro",
-    tagline: "For growing teams",
-    monthly: 6_499,          // ₹6 499 / mo
-    yearly: 6_499 * 10,      // 2 months free on yearly
+    id: "starter",
+    name: "Starter",
+    tagline: "For small teams",
+    monthly: 1_599,          // ₹1 599 / mo
+    yearly: 15_990,          // 2 mo free
     features: [
       "3 000 messages / month",
+      "Remove Botify branding",
+      "Lead capture & email hand-off",
       "Priority support",
-      "Advanced analytics",
-      "Chat-widget customisation",
     ],
-    cta: "Go Pro",
-    popular: true,
+    cta: "Get Starter",
+    popular: false,
   },
 
-  /* ────────── Pro Max ────────── */
+  /* ────────── Growth (15 k) ────────── */
   {
-    id: "pro-max",
-    name: "Pro Max",
-    tagline: "Scale without limits",
-    monthly: 19_999,         // ₹19 999 / mo
-    yearly: 19_999 * 10,     // 2 months free on yearly
+    id: "growth",
+    name: "Growth",
+    tagline: "Most popular",
+    monthly: 4_899,          // ₹4 899 / mo
+    yearly: 48_990,          // 2 mo free
     features: [
       "15 000 messages / month",
-      "Premium support",
-      "White-label branding",
-      "Full feature access",
+      "All integrations & workflows",
+      "Advanced analytics",
+      "White-label launcher",
+      "Priority support + SLA",
     ],
-    cta: "Choose Pro Max",
+    cta: "Upgrade to Growth",
+    popular: true,           // highlight this one
+  },
+
+  /* ────────── Scale (50 k) ────────── */
+  {
+    id: "scale",
+    name: "Scale",
+    tagline: "50 000 msgs / mo",
+    monthly: 12_399,         // ₹12 399 / mo
+    yearly: 123_990,         // 2 mo free
+    features: [
+      "50 000 messages / month",
+      "Unlimited integrations",
+      "Dedicated CSM & Slack channel",
+      "Premium uptime SLA",
+      "Early-access features",
+    ],
+    cta: "Go Scale",
     popular: false,
   },
 ];
@@ -143,7 +164,7 @@ export default function PricingSection() {
                   <>
                     Yearly
                     <span className="ml-2 inline-flex items-center gap-1 text-[10px] px-2 py-[2px] rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-                      <Sparkles size={12} /> 2 months free
+                      <Sparkles size={12} /> 2&nbsp;months free
                     </span>
                   </>
                 )}
@@ -153,7 +174,7 @@ export default function PricingSection() {
         </div>
 
         {/* Plans grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {plans.map((p) => {
             const isPopular = p.popular;
             const price     = priceFor(p);
@@ -174,11 +195,11 @@ export default function PricingSection() {
                     <div className="flex items-center gap-2">
                       {isPopular ? (
                         <Badge tone="gold">
-                          <Crown size={14} /> Most Popular
+                          <Crown size={14} /> Most&nbsp;Popular
                         </Badge>
                       ) : (
                         <Badge>
-                          <Rocket size={14} /> Great Value
+                          <Rocket size={14} /> Great&nbsp;Value
                         </Badge>
                       )}
                     </div>
@@ -219,7 +240,7 @@ export default function PricingSection() {
                   </div>
 
                   {/* Features */}
-                  <ul className="mt-6 space-y-3 text-sm text-gray-700 dark:text-gray-200">
+                  <ul className="mt-6 space-y-3 text-sm text-gray-700 dark:text-gray-200 flex-1">
                     {p.features.map((f) => (
                       <li key={f} className="flex items-start gap-2">
                         <CheckCircle2
@@ -276,9 +297,9 @@ export default function PricingSection() {
         <div className="mt-6 text-center">
           <Link
             to="/faq"
-            className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 hover:underline"
+            className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 hover:underline inline-flex items-center gap-1"
           >
-            Not sure which plan is right? Compare features →
+            <TrendingUp size={14}/> Compare all features →
           </Link>
         </div>
       </div>
