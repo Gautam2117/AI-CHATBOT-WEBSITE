@@ -12,6 +12,12 @@ import { Link } from "react-router-dom";
 
 /* ------------------------------------------------------------------------- */
 /*  SINGLE SOURCE OF TRUTH — keep in sync with server-side PLAN_CATALOG data  */
+/*  Backend reference (INR):                                                  */
+/*    Free:        1,000 msgs/mo                                              */
+/*    StarterLite: ₹499/mo (1,500 msgs/mo, branding kept)                     */
+/*    Starter:     ₹1,599/mo • ₹15,990/yr (3,000 msgs/mo)                     */
+/*    Growth:      ₹4,899/mo • ₹48,990/yr (15,000 msgs/mo)                    */
+/*    Scale:       ₹12,399/mo • ₹1,23,990/yr (50,000 msgs/mo)                 */
 /* ------------------------------------------------------------------------- */
 const RAW_PLANS = [
   /* ────────── Free ────────── */
@@ -22,7 +28,7 @@ const RAW_PLANS = [
     monthly: 0,
     yearly: 0,
     features: [
-      "150 messages / month",
+      "1 000 messages / month",
       "Botify branding",
       "Basic analytics",
       "Community support",
@@ -31,7 +37,24 @@ const RAW_PLANS = [
     popular: false,
   },
 
-  /* ────────── Starter (3 k) ────────── */
+  /* ────────── Starter Lite (1.5k) — monthly only ────────── */
+  {
+    id: "starterlite",
+    name: "Starter Lite",
+    tagline: "Branding kept",
+    monthly: 499,            // ₹499 / mo
+    yearly: null,            // monthly-only
+    features: [
+      "1 500 messages / month",
+      "Botify branding",
+      "Basic analytics",
+      "Community support",
+    ],
+    cta: "Choose Starter Lite",
+    popular: false,
+  },
+
+  /* ────────── Starter (3k) ────────── */
   {
     id: "starter",
     name: "Starter",
@@ -48,7 +71,7 @@ const RAW_PLANS = [
     popular: false,
   },
 
-  /* ────────── Growth (15 k) ────────── */
+  /* ────────── Growth (15k) ────────── */
   {
     id: "growth",
     name: "Growth",
@@ -66,7 +89,7 @@ const RAW_PLANS = [
     popular: true,           // highlight this one
   },
 
-  /* ────────── Scale (50 k) ────────── */
+  /* ────────── Scale (50k) ────────── */
   {
     id: "scale",
     name: "Scale",
@@ -107,8 +130,12 @@ export default function PricingSection() {
 
   const plans = useMemo(() => RAW_PLANS, []);
 
-  const priceFor = (p) => (billing === "monthly" ? p.monthly : p.yearly);
-  const perText  = billing === "monthly" ? "/month" : "/year";
+  // Support monthly-only plans gracefully (e.g., Starter Lite)
+  const isMonthlyOnly = (p) => p.monthly > 0 && (p.yearly == null || p.yearly === 0);
+  const priceFor = (p) =>
+    billing === "yearly" && isMonthlyOnly(p) ? p.monthly : (billing === "monthly" ? p.monthly : p.yearly);
+  const periodFor = (p) =>
+    billing === "yearly" && isMonthlyOnly(p) ? "/month" : (billing === "monthly" ? "/month" : "/year");
 
   return (
     <section
@@ -178,7 +205,7 @@ export default function PricingSection() {
           {plans.map((p) => {
             const isPopular = p.popular;
             const price     = priceFor(p);
-            const showSlash = billing === "yearly" && p.monthly > 0;
+            const showSlash = billing === "yearly" && p.monthly > 0 && p.yearly > 0;
 
             return (
               <div
@@ -202,6 +229,11 @@ export default function PricingSection() {
                           <Rocket size={14} /> Great&nbsp;Value
                         </Badge>
                       )}
+                      {isMonthlyOnly(p) && (
+                        <span className="ml-1 inline-flex items-center gap-1 px-2 py-[2px] rounded-full text-[10px] bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20">
+                          <Info size={12} /> Monthly only
+                        </span>
+                      )}
                     </div>
                     <span className="text-[11px] text-gray-500 dark:text-gray-400">
                       {p.tagline}
@@ -217,11 +249,11 @@ export default function PricingSection() {
                       <div className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                         {price === 0
                           ? "Free"
-                          : `${currency}${price.toLocaleString()}`}
+                          : `${currency}${Number(price).toLocaleString()}`}
                       </div>
                       {price !== 0 && (
                         <span className="text-sm text-gray-600 dark:text-gray-300">
-                          {perText}
+                          {periodFor(p)}
                         </span>
                       )}
                     </div>
@@ -235,6 +267,13 @@ export default function PricingSection() {
                           {currency}
                           {((p.monthly * 12) - p.yearly).toLocaleString()}
                         </span>
+                      </div>
+                    )}
+
+                    {isMonthlyOnly(p) && billing === "yearly" && (
+                      <div className="mt-1 text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <Info size={12} />
+                        <span>This plan is billed monthly.</span>
                       </div>
                     )}
                   </div>
