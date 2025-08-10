@@ -46,6 +46,11 @@ const RAW_PLANS = [
   },
 ];
 
+/* external app endpoint for real signup */
+const APP_URL = "https://ai-chatbot-saas-eight.vercel.app";
+const planHref = (planId, cycle) =>
+  `${APP_URL}/?signup=1&plan=${encodeURIComponent(planId)}&cycle=${encodeURIComponent(cycle)}`;
+
 /* -------------------------------- helpers -------------------------------- */
 function Badge({ children, tone = "indigo" }) {
   const palette =
@@ -70,12 +75,6 @@ export default function PricingSection() {
     () => RAW_PLANS.filter(p => p.id !== "starterlite"),
     []
   );
-
-  const isMonthlyOnly = (p) => p.monthly > 0 && (p.yearly == null || p.yearly === 0);
-  const priceFor = (p) =>
-    billing === "yearly" && isMonthlyOnly(p) ? p.monthly : (billing === "monthly" ? p.monthly : p.yearly);
-  const periodFor = (p) =>
-    billing === "yearly" && isMonthlyOnly(p) ? "/month" : (billing === "monthly" ? "/month" : "/year");
 
   return (
     <section id="pricing" className="relative py-16 sm:py-20 px-6 sm:px-10 md:px-16">
@@ -136,7 +135,15 @@ export default function PricingSection() {
 
         {/* Desktop grid (4-up) */}
         <div className="hidden sm:grid auto-rows-fr grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7">
-          {plans.map((p) => <PlanCard key={p.id} p={p} billing={billing} currency={currency} starterLite={starterLite} />)}
+          {plans.map((p) => (
+            <PlanCard
+              key={p.id}
+              p={p}
+              billing={billing}
+              currency={currency}
+              starterLite={starterLite}
+            />
+          ))}
         </div>
 
         {/* Mobile horizontal snap-scroller */}
@@ -144,7 +151,13 @@ export default function PricingSection() {
           <div className="flex gap-4 min-w-max">
             {plans.map((p) => (
               <div key={p.id} className="snap-start shrink-0 w-[80%]">
-                <PlanCard p={p} billing={billing} currency={currency} starterLite={starterLite} compact />
+                <PlanCard
+                  p={p}
+                  billing={billing}
+                  currency={currency}
+                  starterLite={starterLite}
+                  compact
+                />
               </div>
             ))}
           </div>
@@ -179,8 +192,17 @@ function PlanCard({ p, billing, currency, starterLite, compact = false }) {
   const price = billing === "monthly" ? p.monthly : (p.yearly ?? p.monthly);
   const showSlash = billing === "yearly" && p.monthly > 0 && p.yearly > 0;
   const monthlyOnly = p.monthly > 0 && (p.yearly == null || p.yearly === 0);
-
   const isPopular = p.popular;
+
+  const href = planHref(p.id, billing);
+
+  const openPlan = () => {
+    try {
+      window.open(href, "_blank", "noopener,noreferrer");
+    } catch {
+      // no-op
+    }
+  };
 
   return (
     <div
@@ -188,7 +210,14 @@ function PlanCard({ p, billing, currency, starterLite, compact = false }) {
         isPopular ? "from-amber-400/70 to-fuchsia-400/70" : "from-fuchsia-400/60 to-indigo-400/60"
       } shadow-[0_16px_40px_rgba(2,6,23,0.12)] transition-transform hover:-translate-y-[3px]`}
     >
-      <div className="rounded-3xl h-full bg-white/85 dark:bg-gray-900/85 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6 lg:p-7 flex flex-col">
+      <div
+        className="rounded-3xl h-full bg-white/85 dark:bg-gray-900/85 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6 lg:p-7 flex flex-col cursor-pointer"
+        role="button"
+        tabIndex={0}
+        onClick={openPlan}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && openPlan()}
+        aria-label={`Choose ${p.name} plan`}
+      >
         {/* Badge row */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -249,12 +278,15 @@ function PlanCard({ p, billing, currency, starterLite, compact = false }) {
               <span className="font-semibold">Or Starter Lite</span>{" "}
               <span className="text-gray-600 dark:text-white/60">₹499/mo · 1,500 msgs</span>
             </div>
-            <Link
-              to="/signup?plan=starterlite"
+            <a
+              href={planHref("starterlite", "monthly")}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="shrink-0 inline-flex items-center rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-white bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600 hover:opacity-95"
             >
               Choose
-            </Link>
+            </a>
           </div>
         )}
 
@@ -271,15 +303,21 @@ function PlanCard({ p, billing, currency, starterLite, compact = false }) {
         {/* CTA */}
         <div className="mt-6">
           {p.id === "free" ? (
-            <Link
-              to="/signup"
+            <a
+              href={planHref("free", billing)}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
             >
               {p.cta}
-            </Link>
+            </a>
           ) : (
-            <Link
-              to="/signup"
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className={`w-full inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold transition ${
                 isPopular
                   ? "bg-white text-indigo-700 hover:bg-gray-50 shadow"
@@ -287,7 +325,7 @@ function PlanCard({ p, billing, currency, starterLite, compact = false }) {
               }`}
             >
               {p.cta}
-            </Link>
+            </a>
           )}
         </div>
       </div>

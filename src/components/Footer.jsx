@@ -1,4 +1,3 @@
-// src/components/Footer.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { Mail, Twitter, Linkedin, Github } from "lucide-react";
@@ -180,6 +179,40 @@ export default function Footer() {
                 <p className="mt-1 text-[10px] text-gray-500 dark:text-gray-400 italic">
                   (demo only — form disabled)
                 </p>
+              </div>
+            </div>
+
+            {/* install pill */}
+            <div className="px-6 sm:px-8 -mt-2">
+              <div className="flex justify-center">
+                <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs
+                                  border border-emerald-400/30 bg-emerald-500/10
+                                  text-emerald-700 dark:text-emerald-200">
+                  ⚡ Installs in 2 minutes
+                </span>
+              </div>
+            </div>
+
+            {/* trust row */}
+            <div className="px-6 sm:px-8 mt-3">
+              <div className="flex flex-wrap items-center justify-center gap-2 text-[11px]">
+                <span className="inline-flex items-center rounded-full px-2.5 py-1
+                                  bg-white/60 text-gray-800 border border-white/70
+                                  dark:bg-white/5 dark:text-white/80 dark:border-white/10">
+                  🇮🇳 Made in India
+                </span>
+                <span className="text-gray-400 dark:text-white/20">•</span>
+                <span className="inline-flex items-center rounded-full px-2.5 py-1
+                                  bg-white/60 text-gray-800 border border-white/70
+                                  dark:bg-white/5 dark:text-white/80 dark:border-white/10">
+                  GDPR-ready
+                </span>
+                <span className="text-gray-400 dark:text-white/20">•</span>
+                <span className="inline-flex items-center rounded-full px-2.5 py-1
+                                  bg-white/60 text-gray-800 border border-white/70
+                                  dark:bg-white/5 dark:text-white/80 dark:border-white/10">
+                  🔒 Data encrypted at rest/in transit
+                </span>
               </div>
             </div>
 
