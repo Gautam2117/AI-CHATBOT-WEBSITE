@@ -113,6 +113,8 @@ export default function Footer() {
                   <li>
                     <a
                       href="https://ai-chatbot-saas-eight.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-300 transition"
                     >
                       Launch App

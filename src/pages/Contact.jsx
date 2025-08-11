@@ -318,10 +318,40 @@ export default function Contact() {
               </div>
             </div>
             <ul className="mt-4 text-sm text-gray-700 dark:text-gray-300 space-y-2">
-              <li>• Priority replies for Pro & Pro Max</li>
-              <li>• Attach links or public docs in your message</li>
-              <li>• For billing, include your workspace email</li>
+              <li className="flex items-start gap-2">
+                <span className="inline-block h-5 w-5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 grid place-items-center">✅</span>
+                <span>
+                  <span className="font-semibold">Priority replies</span> for{" "}
+                  <span className="px-2 py-[2px] rounded-full text-[11px] font-semibold bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/30">Growth</span>{" "}
+                  &amp;{" "}
+                  <span className="px-2 py-[2px] rounded-full text-[11px] font-semibold bg-fuchsia-400/20 text-fuchsia-700 dark:text-fuchsia-300 border border-fuchsia-400/30">Scale</span>{" "}
+                  (SLA on Growth, Premium SLA on Scale)
+                </span>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="inline-block h-5 w-5 rounded-md bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 grid place-items-center">🛠️</span>
+                <span>
+                  <span className="font-semibold">Starter</span> gets standard support •{" "}
+                  <span className="font-semibold">Free</span> is community support
+                </span>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="inline-block h-5 w-5 rounded-md bg-sky-500/15 text-sky-600 dark:text-sky-300 grid place-items-center">🔗</span>
+                <span>
+                  Attach links or public docs (GDrive, Notion, GitHub README, website URLs) for faster context
+                </span>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="inline-block h-5 w-5 rounded-md bg-pink-500/15 text-pink-600 dark:text-pink-300 grid place-items-center">📧</span>
+                <span>
+                  For billing, include your <span className="font-semibold">workspace email</span> + plan (<em>Starter</em>/<em>Growth</em>/<em>Scale</em>) and cycle (<em>Monthly</em>/<em>Yearly</em>)
+                </span>
+              </li>
             </ul>
+
           </div>
 
           <div className="rounded-2xl bg-white/85 dark:bg-gray-900/70 backdrop-blur-xl border border-white/60 dark:border-white/10 p-6">

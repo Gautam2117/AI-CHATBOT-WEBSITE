@@ -97,6 +97,8 @@ const Home = () => {
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Link
                 to="https://ai-chatbot-saas-eight.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative group overflow-hidden px-7 py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
                 aria-label="Get started with Botify for free"
               >

@@ -2,6 +2,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Briefcase, Headphones, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const useCases = [
   {
@@ -148,22 +149,23 @@ export default function UseCasesSection() {
 
       {/* CTA under grid */}
       <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a
-          href="/features"
+        <Link
+          to="/features"
           className="px-5 py-2.5 rounded-xl border border-indigo-300/70 dark:border-indigo-600/40
-                     text-indigo-700 dark:text-indigo-200 hover:bg-indigo-50/60 dark:hover:bg-white/5
-                     font-medium transition"
+                    text-indigo-700 dark:text-indigo-200 hover:bg-indigo-50/60 dark:hover:bg-white/5
+                    font-medium transition"
         >
           Explore all capabilities
-        </a>
-        <a
-          href="/pricing"
+        </Link>
+
+        <Link
+          to="/pricing"
           className="px-5 py-2.5 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl
-                     transition transform hover:-translate-y-0.5
-                     bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
+                    transition transform hover:-translate-y-0.5
+                    bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600"
         >
           Get started in minutes
-        </a>
+        </Link>
       </div>
     </section>
   );

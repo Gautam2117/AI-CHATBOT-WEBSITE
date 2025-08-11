@@ -175,10 +175,7 @@ export default function PricingSection() {
           Prices in INR. Taxes may apply. Message quotas reset monthly.
         </p>
         <div className="mt-5 text-center">
-          <Link
-            to="/faq"
-            className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 hover:underline inline-flex items-center gap-1"
-          >
+          <Link to="/features#compare" className="text-sm font-semibold text-indigo-700 dark:text-indigo-300 hover:underline inline-flex items-center gap-1">
             <TrendingUp size={14} /> Compare all features →
           </Link>
         </div>

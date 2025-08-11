@@ -3,46 +3,50 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
+/** 🧠 Single source of truth for public FAQs.
+ *  These should mirror what your Botify instance uses, so visitors see parity.
+ *  Keep copy evergreen to avoid drift.
+ */
 const RAW_FAQS = [
   {
     q: "What is Botify?",
-    a: "Botify is an AI-powered chatbot platform that helps businesses automate customer support, capture leads, and scale engagement effortlessly.",
+    a: "Botify is an AI-powered support assistant that answers common questions instantly, captures leads, and hands off to your team when needed.",
   },
   {
     q: "Is there a free plan available?",
-    a: "Yes! Botify offers a free plan with 2,000 tokens per day, perfect for small teams or testing out the platform.",
+    a: "Yes — Botify has a Free plan suitable for testing and small sites. Paid plans unlock higher message limits and advanced features. See pricing for details.",
   },
   {
     q: "Can I integrate Botify with my website?",
-    a: "Absolutely. You can integrate using our lightweight JavaScript widget or developer-friendly API for full customization.",
+    a: "Absolutely. Add our lightweight JavaScript snippet and you're live in ~2 minutes. A developer-friendly API is also available.",
   },
   {
-    q: "Does Botify support multi-language conversations?",
-    a: "Yes, Botify supports multi-language input and output, helping you communicate with users globally.",
+    q: "Does Botify support multiple languages?",
+    a: "Yes. Botify supports multilingual input and output so you can help customers globally.",
   },
   {
     q: "Can I train the bot with my own data?",
-    a: "Yes, you can upload your FAQs, documents, or custom knowledge base and Botify will learn from them in real-time.",
+    a: "Yes. Upload your FAQs or knowledge base and Botify will use it in real time to answer questions.",
   },
   {
     q: "How customizable is the chatbot widget?",
-    a: "You can fully customize the look, feel, and behavior of the Botify widget, including colors, icon, greeting text, and more.",
+    a: "You can customize colors, logo, greeting, position, radius, fonts, suggestion chips, and more — no code required.",
   },
   {
-    q: "Is Botify secure and GDPR compliant?",
-    a: "Yes. Botify follows industry-standard security practices and is compliant with GDPR and other major data protection regulations.",
+    q: "Is Botify secure and GDPR-ready?",
+    a: "Yes. Data is encrypted in transit and at rest, and Botify is GDPR-ready. See our Privacy Policy for details.",
   },
   {
     q: "Can my team collaborate inside Botify?",
-    a: "Yes. You can invite teammates, assign roles, and manage bot responses collaboratively via the Botify dashboard.",
+    a: "Yes. Invite teammates, set roles, and manage your knowledge collaboratively in the dashboard.",
   },
   {
     q: "Does Botify provide analytics?",
-    a: "Absolutely. Our dashboard gives you real-time insights, message volumes, user activity, satisfaction scores, and more.",
+    a: "Yes. The dashboard shows real-time answers, deflection rates, leads captured, and engagement.",
   },
   {
     q: "What support options are available?",
-    a: "We offer email and live chat support for all plans. Pro and Unlimited users also get dedicated onboarding assistance.",
+    a: "Email and in-app chat for all plans. Higher tiers include priority support and assisted onboarding.",
   },
 ];
 
@@ -68,7 +72,7 @@ const highlightHTML = (text, q) => {
 export default function FAQ() {
   const [query, setQuery] = useState("");
   const [expandAll, setExpandAll] = useState(false);
-  const [reseed, setReseed] = useState(0); // force re-mount disclosures to update defaultOpen
+  const [reseed, setReseed] = useState(0);
   const searchRef = useRef(null);
 
   // Press "/" to focus search
@@ -109,7 +113,6 @@ export default function FAQ() {
     if (!hash) return;
     const el = document.getElementById(hash);
     if (el) {
-      // expand all once so the targeted item is open
       setExpandAll(true);
       setReseed((x) => x + 1);
       setTimeout(() => {
@@ -149,7 +152,10 @@ export default function FAQ() {
       </div>
 
       {/* SEO */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto">
@@ -162,8 +168,24 @@ export default function FAQ() {
             Questions
           </span>
         </h1>
+
+        {/* ✅ Parity note so the FAQ + Bot feel consistent */}
         <p className="mt-3 text-gray-600 dark:text-gray-300">
-          Quick answers to everything about Botify. Press <kbd className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-800 text-xs">/</kbd> to search.
+          These FAQs are the <strong>same knowledge our AI uses</strong> to answer instantly in chat.
+          Prefer chat?{" "}
+          <a
+            href="https://ai-chatbot-saas-eight.vercel.app/"
+            className="font-semibold underline decoration-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ask our bot
+          </a>
+          .
+        </p>
+
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          GDPR-ready • Data encrypted at rest & in transit
         </p>
       </div>
 
@@ -199,7 +221,8 @@ export default function FAQ() {
 
       {/* Results count */}
       <div className="max-w-3xl mx-auto mt-3 text-xs text-gray-500 dark:text-gray-400">
-        {filtered.length} result{filtered.length !== 1 ? "s" : ""} {query ? `for “${query}”` : ""}
+        {filtered.length} result{filtered.length !== 1 ? "s" : ""}{" "}
+        {query ? `for “${query}”` : ""}
       </div>
 
       {/* List */}
@@ -209,7 +232,7 @@ export default function FAQ() {
           const qHTML = highlightHTML(faq.q, query);
           const aHTML = highlightHTML(faq.a, query);
 
-          return (
+        return (
             <Disclosure key={`${reseed}-${id}-${idx}`} defaultOpen={expandAll}>
               {({ open }) => (
                 <div
@@ -229,7 +252,8 @@ export default function FAQ() {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          copyLink(id);
+                          const url = `${window.location.origin}${window.location.pathname}#${id}`;
+                          navigator.clipboard?.writeText(url);
                         }}
                         title="Copy link"
                         className="hidden sm:inline-flex text-xs px-2 py-1 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
@@ -237,7 +261,9 @@ export default function FAQ() {
                         Link
                       </button>
                       <ChevronDownIcon
-                        className={`w-5 h-5 text-indigo-500 dark:text-indigo-300 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+                        className={`w-5 h-5 text-indigo-500 dark:text-indigo-300 transition-transform duration-300 ${
+                          open ? "rotate-180" : ""
+                        }`}
                         aria-hidden="true"
                       />
                     </div>

@@ -74,6 +74,8 @@ export default function StickyCTABar() {
             <div className="flex items-center gap-2">
               <Link
                 to="https://ai-chatbot-saas-eight.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-4 sm:px-5 py-2 rounded-xl text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-transform hover:-translate-y-0.5 bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-sky-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
                 aria-label="Get started with Botify for free"
               >

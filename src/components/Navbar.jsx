@@ -135,6 +135,8 @@ export default function Navbar() {
           {/* Shiny CTA (mouse-follow glow) */}
           <a
             href="https://ai-chatbot-saas-eight.vercel.app/"
+            target="_blank" 
+            rel="noopener noreferrer"
             onMouseMove={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
@@ -151,6 +153,8 @@ export default function Navbar() {
         <div className="md:hidden flex items-center gap-2">
           <a
             href="https://ai-chatbot-saas-eight.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center px-3 py-1.5 rounded-lg text-white text-sm font-semibold bg-gradient-to-r from-indigo-600 to-fuchsia-600 shadow-md"
           >
             Start
