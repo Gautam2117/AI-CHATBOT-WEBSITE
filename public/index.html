@@ -3,13 +3,17 @@
   <head>
     <meta charset="UTF-8" />
 
-    <!-- Prevent dark/light theme flash before React mounts -->
+    <!-- Prevent theme flash (default to LIGHT unless user saved "dark") -->
     <script>
       (function () {
         try {
           var t = localStorage.getItem("theme");
-          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-          if (t === "dark" || (!t && prefersDark)) document.documentElement.classList.add("dark");
+          if (t === "dark") {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+            if (!t) localStorage.setItem("theme", "light"); // ensure main.jsx won't flip to dark
+          }
         } catch (e) {}
       })();
     </script>
@@ -20,10 +24,13 @@
     <!-- Favicon / Icons -->
     <link rel="icon" type="image/png" href="/Botify_logo.png" />
     <link rel="icon" type="image/x-icon" href="/Botify_logo.ico" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- Remove manifest until the file exists to avoid 404s -->
+    <!-- <link rel="manifest" href="/manifest.webmanifest" /> -->
+
     <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="color-scheme" content="light dark" />
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Botify" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -53,7 +60,7 @@
     <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-    <!-- Google Analytics (async) -->
+    <!-- Analytics (async) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TC11BPJXDF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -62,70 +69,67 @@
       gtag('config', 'G-TC11BPJXDF');
     </script>
 
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"SoftwareApplication",
-      "name":"Botify",
-      "applicationCategory":"BusinessApplication",
-      "operatingSystem":"Web",
-      "url":"https://botify-website.vercel.app/",
-      "image":"https://botify-website.vercel.app/og-image.png",
-      "description":"AI chatbot that automates support, captures leads, and powers 24/7 conversations.",
-      "offers":[
-        {"@type":"Offer","price":"0","priceCurrency":"INR","name":"Free"},
-        {"@type":"Offer","price":"149","priceCurrency":"INR","name":"Pro"},
-        {"@type":"Offer","price":"399","priceCurrency":"INR","name":"Pro Max"}
-      ],
-      "publisher":{"@type":"Organization","name":"Botify"}
-    }
+    <!-- Apollo Website Visitor Identification (async, non-blocking) -->
+    <script>
+      (function initApollo() {
+        try {
+          var s = document.createElement("script");
+          s.src = "https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=" +
+                  Math.random().toString(36).slice(2);
+          s.async = true;
+          s.defer = true;
+          s.onload = function () {
+            if (window.trackingFunctions && window.trackingFunctions.onLoad) {
+              window.trackingFunctions.onLoad({ appId: "690218114e2abc0015604acb" });
+            }
+          };
+          document.head.appendChild(s);
+        } catch (e) {}
+      })();
     </script>
 
-    <!-- Apollo Website Tracker: place right before </head> -->
-    <script>
-      (function () {
-        // skip on localhost so you do not send test traffic
-        if (/^(localhost|127\.0\.0\.1)/i.test(location.hostname)) return;
-        // avoid duplicate injection
-        if (document.getElementById("apollo-website-tracker")) return;
-
-        function initApollo(){
-          var n = Math.random().toString(36).substring(7);
-          var o = document.createElement("script");
-          o.id = "apollo-website-tracker";
-          o.src = "https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=" + n;
-          o.async = true;
-          o.defer = true;
-          o.onload = function () {
-            window.trackingFunctions.onLoad({ appId: "690218114e2abc0015604acb" });
-          };
-          document.head.appendChild(o);
-        }
-        try { initApollo(); } catch (e) {}
-      })();
+    <!-- JSON-LD: SoftwareApplication snippet -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Botify",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": "https://botify-website.vercel.app/",
+      "image": "https://botify-website.vercel.app/og-image.png",
+      "description": "AI chatbot that automates support, captures leads, and powers 24/7 conversations.",
+      "offers": [
+        { "@type": "Offer", "price": "0", "priceCurrency": "INR", "name": "Free" },
+        { "@type": "Offer", "price": "149", "priceCurrency": "INR", "name": "Pro" },
+        { "@type": "Offer", "price": "399", "priceCurrency": "INR", "name": "Pro Max" }
+      ],
+      "publisher": { "@type": "Organization", "name": "Botify" }
+    }
     </script>
   </head>
 
   <body>
     <div id="root"></div>
 
-    <!-- Your app entry -->
+    <!-- App entry -->
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Optional service worker -->
+    <!-- Optional: register service worker only if /public/sw.js exists -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          navigator.serviceWorker.register("/sw.js").catch(function(){});
+          fetch("/sw.js", { method: "HEAD" })
+            .then(function (r) { if (r.ok) navigator.serviceWorker.register("/sw.js"); })
+            .catch(function(){});
         });
       }
     </script>
 
     <noscript>
       <style>
-        html { background:#fff; color:#111; }
-        @media (prefers-color-scheme: dark) { html { background:#0b0f1a; color:#fff; } }
+        html { background: #fff; color: #111; }
+        @media (prefers-color-scheme: dark) { html { background: #0b0f1a; color: #fff; } }
       </style>
       Please enable JavaScript to run this app.
     </noscript>
